@@ -1,0 +1,9 @@
+log_level: 1
+http:
+  host: ""
+  port: 8000
+client:
+  timeout: 5000000000
+cache:
+  size: "10M"
+  path: "/tmp/cache"

@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  image-previewer-nginx:
+    build:
+      context: ./../nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - image-previewer
+    volumes:
+      - ./../../sample:/static:ro
+
+  image-previewer:
+    build:
+      context: ./../../
+      dockerfile: ./build/Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - image-previewer
+    volumes:
+      - cache:/tmp/cache
+
+networks:
+  image-previewer:
+
+volumes:
+  cache:
