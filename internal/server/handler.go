@@ -3,12 +3,12 @@ package server
 import (
 	"errors"
 	"fmt"
-	"github.com/rs/zerolog/log"
 	"net/http"
 	"strconv"
 	"strings"
 
 	"github.com/Roman-Otus-Learning/image-previewer/internal/app"
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -43,7 +43,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resized, err := h.app.Resize(r.Context(), rq.url, rq.width, rq.height, r.Header)
+	resized, err := h.app.ResizeImage(r.Context(), rq.url, rq.width, rq.height, r.Header)
 	if err != nil {
 		log.Error().Err(err).Msg("resize")
 		w.WriteHeader(http.StatusBadGateway)

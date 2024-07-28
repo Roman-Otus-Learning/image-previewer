@@ -2,6 +2,10 @@ package main
 
 import (
 	"context"
+	"io"
+	"os"
+	"sync"
+
 	"github.com/Roman-Otus-Learning/image-previewer/internal/builder"
 	"github.com/Roman-Otus-Learning/image-previewer/internal/config"
 	"github.com/pkg/errors"
@@ -10,9 +14,6 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"io"
-	"os"
-	"sync"
 )
 
 type Application struct {

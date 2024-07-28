@@ -5,8 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"github.com/pkg/errors"
-	"github.com/rs/zerolog/log"
 	"io"
 	"net/http"
 	"strconv"
@@ -14,6 +12,8 @@ import (
 	"github.com/Roman-Otus-Learning/image-previewer/internal/app"
 	"github.com/Roman-Otus-Learning/image-previewer/internal/cache/filesystem"
 	"github.com/Roman-Otus-Learning/image-previewer/internal/cache/lru"
+	"github.com/pkg/errors"
+	"github.com/rs/zerolog/log"
 )
 
 var _ app.App = (*AppCacheDecorator)(nil)
@@ -39,7 +39,7 @@ func CreateAppCacheDecorator(app app.App, limit uint64, cachePath string) (*AppC
 	}, nil
 }
 
-func (a *AppCacheDecorator) Resize(
+func (a *AppCacheDecorator) ResizeImage(
 	ctx context.Context,
 	url string,
 	width, height int,
@@ -59,7 +59,7 @@ func (a *AppCacheDecorator) Resize(
 		return content, nil
 	}
 
-	content, err := a.app.Resize(ctx, url, width, height, headers)
+	content, err := a.app.ResizeImage(ctx, url, width, height, headers)
 	if err != nil {
 		return nil, errors.Wrap(err, "resize from cached decorator")
 	}

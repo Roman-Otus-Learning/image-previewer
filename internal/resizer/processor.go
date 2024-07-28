@@ -1,18 +1,18 @@
 package resizer
 
 import (
-	"github.com/pkg/errors"
 	"image"
 	"io"
 
 	"github.com/disintegration/imaging"
+	"github.com/pkg/errors"
 )
 
 var _ ImageProcessor = (*processor)(nil)
 
 type ImageProcessor interface {
 	Decode(reader io.Reader) (image.Image, error)
-	Encode(img image.Image, writer io.Writer) error
+	Encode(img image.Image, quality int, writer io.Writer) error
 	Resize(img image.Image, width, height int) image.Image
 }
 
@@ -27,8 +27,8 @@ func (i *processor) Decode(reader io.Reader) (image.Image, error) {
 	return img, nil
 }
 
-func (i *processor) Encode(img image.Image, writer io.Writer) error {
-	if err := imaging.Encode(writer, img, imaging.JPEG); err != nil {
+func (i *processor) Encode(img image.Image, quality int, writer io.Writer) error {
+	if err := imaging.Encode(writer, img, imaging.JPEG, imaging.JPEGQuality(quality)); err != nil {
 		return errors.Wrap(err, "image encode")
 	}
 

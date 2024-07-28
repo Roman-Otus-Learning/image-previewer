@@ -2,11 +2,11 @@ package server
 
 import (
 	"context"
-	"github.com/rs/zerolog/log"
 	"net/http"
 	"sync"
 
 	"github.com/Roman-Otus-Learning/image-previewer/internal/app"
+	"github.com/rs/zerolog/log"
 )
 
 type Server struct {
@@ -15,7 +15,7 @@ type Server struct {
 
 func CreateHTTPServer(addr string, app app.App) *Server {
 	return &Server{
-		server: &http.Server{
+		server: &http.Server{ //nolint: gosec
 			Addr:    addr,
 			Handler: &Handler{app},
 		},

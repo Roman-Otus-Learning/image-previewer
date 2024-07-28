@@ -45,20 +45,17 @@ func (c *CacheLRU) Set(key string, item *Item) bool {
 	item.key = key
 	listItem, isExists := c.items[key]
 	if isExists {
-		cacheItem := listItem.Value.(*list.Element)
-		cacheItem.Value = item
+		listItem.Value = item
 		c.list.MoveToFront(listItem)
 
 		return isExists
 	}
 
-	if c.isCapacityExceeded() {
-		c.dropLastItem()
-	}
-
 	newListItem := c.list.PushFront(item)
 	c.items[key] = newListItem
 	c.size += item.Size
+
+	c.ensureLimits()
 
 	return isExists
 }
@@ -77,6 +74,16 @@ func (c *CacheLRU) Get(key string) (*Item, bool) {
 	return listItem.Value.(*Item), isExists
 }
 
+func (c *CacheLRU) ensureLimits() {
+	for {
+		if !c.isCapacityExceeded() {
+			break
+		}
+
+		c.dropLastItem()
+	}
+}
+
 func (c *CacheLRU) dropLastItem() {
 	lastListItem := c.list.Back()
 	item := lastListItem.Value.(*Item)
@@ -93,5 +100,5 @@ func (c *CacheLRU) dropLastItem() {
 }
 
 func (c *CacheLRU) isCapacityExceeded() bool {
-	return c.size >= c.limit
+	return c.size > c.limit
 }

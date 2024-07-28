@@ -1,9 +1,10 @@
 package filesystem
 
 import (
-	"github.com/pkg/errors"
 	"os"
 	"path/filepath"
+
+	"github.com/pkg/errors"
 )
 
 var _ Filesystem = (*DiscFilesystem)(nil)

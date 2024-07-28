@@ -1,6 +1,8 @@
 package builder
 
 import (
+	"time"
+
 	"code.cloudfoundry.org/bytefmt"
 	"github.com/Roman-Otus-Learning/image-previewer/internal/app"
 	"github.com/Roman-Otus-Learning/image-previewer/internal/cache"
@@ -10,7 +12,6 @@ import (
 	"github.com/Roman-Otus-Learning/image-previewer/internal/server"
 	"github.com/pkg/errors"
 	"golang.org/x/net/context"
-	"time"
 )
 
 type Builder struct {
@@ -45,7 +46,7 @@ func (b *Builder) CreateResizer() *resizer.ImageResizer {
 }
 
 func (b *Builder) CreateApplication(client *client.HTTPClient, resizer *resizer.ImageResizer) (app.App, error) {
-	application := app.CreateResizerApp(client, resizer)
+	application := app.CreateResizerApp(client, resizer, b.config.Image.Quality)
 
 	cacheSizeBytes, err := bytefmt.ToBytes(b.config.Cache.Size)
 	if err != nil {

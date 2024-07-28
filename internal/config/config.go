@@ -7,6 +7,7 @@ type Config struct {
 	HTTP   HTTP
 	Client Client
 	Cache  Cache
+	Image  Image
 }
 
 func (c *Config) HTTPAddr() string {

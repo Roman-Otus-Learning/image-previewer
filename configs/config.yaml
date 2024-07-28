@@ -7,3 +7,5 @@ client:
 cache:
   size: "10M"
   path: "/tmp/cache"
+image:
+  quality: 70

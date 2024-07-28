@@ -2,9 +2,10 @@ package client
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"net/http"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 var _ Client = (*HTTPClient)(nil)

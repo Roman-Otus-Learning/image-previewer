@@ -1,5 +1,4 @@
 name: Image Previewer
-
 on:
   push:
     branches:
@@ -10,77 +9,43 @@ env:
   GO111MODULE: "on"
 
 jobs:
-  lint:
+  build:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.ref, 'calendar') }}
     steps:
-      - name: Extract branch name
-        run: echo "BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
-
-      - name: Set up Go
+      - name: Set up Golang
         uses: actions/setup-go@v3
         with:
-          go-version: ~1.19
+          go-version: ~1.22
 
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Linters
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: v1.50.1
-          working-directory: ${{ env.BRANCH }}
+      - name: Build
+        run: make build
 
   tests:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.ref, 'calendar') }}
     steps:
-      - name: Extract branch name
-        run: echo "BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
-
-      - name: Set up Go
+      - name: Set up Golang
         uses: actions/setup-go@v3
         with:
-          go-version: ^1.19
+          go-version: ^1.22
 
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Unit tests
-        run: go sample -v -count=1 -race -timeout=1m ./...
-        working-directory: ${{ env.BRANCH }}
+      - name: Tests
+        run: make test
 
-      - name: Optimization tests
-        run: go sample -v -count=1 -timeout=1m -tags bench ./...
-        if: env.BRANCH == 'hw10_program_optimization'
-        working-directory: ${{ env.BRANCH }}
-
-      - name: Bash tests
-        shell: bash
-        run: ./sample.sh
-        if: contains('hw01_hello_otus hw07_file_copying hw08_envdir_tool hw11_telnet_client', env.BRANCH)
-        working-directory: ${{ env.BRANCH }}
-
-  tests_by_makefile:
+  lint:
     runs-on: ubuntu-latest
-    if: contains(github.ref, 'calendar')
     steps:
-      - name: Set up Go
-        uses: actions/setup-go@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v4
         with:
-          go-version: ^1.19
-
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: make lint
-        run: make lint
-        working-directory: hw12_13_14_15_calendar
-
-      - name: make build
-        run: make build
-        working-directory: hw12_13_14_15_calendar
-
-      - name: make sample
-        run: make sample
-        working-directory: hw12_13_14_15_calendar
+          go-version: '1.22'
+          cache: false
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.54
